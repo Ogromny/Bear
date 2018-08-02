@@ -2,63 +2,68 @@ import "dart:collection";
 import "dart:io" show HttpStatus;
 
 import "charbon_context.dart";
-import "charbon_request_handler.dart";
+import "charbon_route.dart";
 
 class CharbonRouter {
-  List<CharbonRequestHandler> _routes;
+  final List<CharbonRoute> _routes;
 
-  CharbonRouter() : _routes = new List<CharbonRequestHandler>();
+  CharbonRouter() : _routes = new List<CharbonRoute>();
 
-  void addRoute(String method, String path, Function handler) {
-    _routes.add(new CharbonRequestHandler(method, path, handler));
+  void add(String method, String path /*, Function handler*/) {
+    _routes.add(new CharbonRoute(method, path /*, handler*/));
   }
 
   void route(CharbonContext charbonContext) {
-    List<CharbonRequestHandler> filteredRoutes = _routes
-        .where((CharbonRequestHandler route) =>
-    route.method == charbonContext.request.method &&
-        route.matches(charbonContext))
+    final List<CharbonRoute> filteredRoutes = _routes
+        .where((CharbonRoute route) =>
+            route.method == charbonContext.request.method &&
+            route.matches(charbonContext))
         .toList();
 
-    CharbonRequestHandler finalRoute = prioritizeRouter(charbonContext, filteredRoutes);
+    final CharbonRoute topRoute =
+        prioritizeRouter(charbonContext, filteredRoutes);
 
-    if (finalRoute != null) {
-      finalRoute.handle(charbonContext);
+    if (topRoute != null) {
+      topRoute.handle(charbonContext);
     } else {
       charbonContext.response.statusCode = HttpStatus.internalServerError;
+      charbonContext.response.write("NEED TO IMPLEMENT ERROR HANDLER");
       charbonContext.response.close();
     }
   }
 
-  CharbonRequestHandler prioritizeRouter(CharbonContext charbonContext,
-      List<CharbonRequestHandler> routes) {
-    Map<CharbonRequestHandler, int> mapPriorities = new HashMap<
-        CharbonRequestHandler,
-        int>();
+  CharbonRoute prioritizeRouter(
+      CharbonContext charbonContext, List<CharbonRoute> routes) {
+    final Map<CharbonRoute, int> priorities = new HashMap<CharbonRoute, int>();
 
-    for (CharbonRequestHandler handler in routes) {
-      List<String> pathSegments = handler.path.split("/");
-      List<String> reqPathSegments = charbonContext.request.uri.path.split("/");
+    for (CharbonRoute route in routes) {
+      final List<String> pathNodes = route.path.split("/");
+      final List<String> requestNodes =
+          charbonContext.request.uri.path.split("/");
 
-      for (int i = 0; i < pathSegments.length; i++) {
-        String pathSegment = pathSegments[i];
-        String reqPathSegment = reqPathSegments[i];
+      for (int i = 0; i < pathNodes.length; i++) {
+        final String pathNode = pathNodes[i];
+        final String requestNode = requestNodes[i];
 
-        mapPriorities.putIfAbsent(handler, () => 0);
+        priorities.putIfAbsent(route, () => 0);
 
-        if (pathSegment == reqPathSegment) {
-          mapPriorities[handler] += 2;
-        } else if (pathSegment.startsWith(":")) {
-          mapPriorities[handler] += 1;
+        if (pathNode == requestNode) {
+          priorities[route] += 2;
+        } else if (pathNode.startsWith(":")) {
+          priorities[route] += 1;
         }
       }
     }
 
-    List<int> values = mapPriorities.values.toList();
+    final List<int> values = priorities.values.toList();
     values.sort((int a, int b) => b - a);
 
-    for (CharbonRequestHandler handler in mapPriorities.keys) {
-      if (mapPriorities[handler] == values[0]) return handler;
+    CharbonRoute topRoute;
+
+    for (CharbonRoute route in priorities.keys) {
+      if (priorities[route] == values.first) topRoute = route;
     }
+
+    return topRoute;
   }
 }
