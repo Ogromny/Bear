@@ -14,7 +14,8 @@ class CharbonContext {
   void send(String output) {
     this._httpResponse
       ..write(output)
-      ..done.catchError((Error e) => print("炭 Error sending response: ${e}"))
+      ..done.catchError((Error error) => print("炭 Error sending response: "
+          "${error}"))
       ..close();
   }
 }
