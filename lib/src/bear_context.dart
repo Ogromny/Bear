@@ -14,7 +14,7 @@ class BearContext {
   void send(String output) {
     this._httpResponse
       ..write(output)
-      ..done.catchError((Error error) => print("炭 Error sending response: "
+      ..done.catchError((Error error) => print("🐻️ Error sending response: "
           "${error}"))
       ..close();
   }
