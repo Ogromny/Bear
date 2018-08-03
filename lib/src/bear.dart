@@ -7,7 +7,7 @@ class Bear {
   HttpServer _server;
   BearRouter _router;
 
-  Bear(): this._router = new BearRouter();
+  Bear() : this._router = new BearRouter();
 
   void get(String path, Function handler) {
     _router.add("GET", path, handler);
@@ -17,10 +17,10 @@ class Bear {
     _router.add("POST", path, handler);
   }
 
-  void listen(InternetAddress host, int port) async {
+  void listen(InternetAddress host, int port, {bool silent: false}) async {
     this._server = await HttpServer.bind(host, port);
 
-    print("🐻️ Listening on ${host.address}:${port}");
+    if (!silent) print("🐻️ Listening on ${host.address}:${port}");
 
     await for (HttpRequest request in this._server) {
       final BearContext bearContext = new BearContext(request);
@@ -28,8 +28,9 @@ class Bear {
     }
   }
 
-  void close() {
-    this._server.close();
-    print("🐻️ Closed");
+  void close({bool force: false, bool silent: false}) {
+    this._server.close(force: force);
+
+    if (!silent) print("🐻️ Closed");
   }
 }
