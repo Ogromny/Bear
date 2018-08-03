@@ -9,12 +9,12 @@ class Bear {
 
   Bear(): this._router = new BearRouter();
 
-  void get(String paBth, Function handler) {
-    _router.add("GET", path/*, handler*/);
+  void get(String path, Function handler) {
+    _router.add("GET", path, handler);
   }
 
   void post(String path, Function handler) {
-    _router.add("POST", path/*, handler*/);
+    _router.add("POST", path, handler);
   }
 
   void listen(InternetAddress host, int port) async {
@@ -23,8 +23,8 @@ class Bear {
     print("🐻️ Listening on ${host.address}:${port}");
 
     await for (HttpRequest request in this._server) {
-      final BearContext charbonContext = new BearContext(request);
-      this._router.route(charbonContext);
+      final BearContext bearContext = new BearContext(request);
+      this._router.route(bearContext);
     }
   }
 

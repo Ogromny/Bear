@@ -7,16 +7,15 @@ class BearRoute {
   String get path => _path;
   String _path;
 
-//  final Function _handler;
+  final Function _handler;
 
-  BearRoute(this._method, this._path /*, this._handler*/);
+  BearRoute(this._method, this._path, this._handler);
 
-  bool matches(BearContext charbonContext) {
-    if (charbonContext.request.method != _method) return false;
+  bool matches(BearContext bearContext) {
+    if (bearContext.request.method != _method) return false;
 
     final List<String> pathNodes = _path.split("/");
-    final List<String> requestNodes =
-        charbonContext.request.uri.path.split("/");
+    final List<String> requestNodes = bearContext.request.uri.path.split("/");
 
     if (pathNodes.length != requestNodes.length) return false;
 
@@ -32,8 +31,7 @@ class BearRoute {
 
   bool _match(String pathNode, String requestNode) => pathNode == requestNode;
 
-  void handle(BearContext charbonContext) {
-    // TODO
-//    _handler(charbonContext);
+  void handle(BearContext bearContext) {
+    _handler(bearContext);
   }
 }

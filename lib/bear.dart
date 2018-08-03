@@ -1,4 +1,4 @@
-library charbon;
+library bear;
 
 export "src/bear.dart";
 export "src/bear_context.dart";

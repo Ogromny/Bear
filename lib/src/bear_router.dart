@@ -9,37 +9,36 @@ class BearRouter {
 
   BearRouter() : _routes = new List<BearRoute>();
 
-  void add(String method, String path /*, Function handler*/) {
-    _routes.add(new BearRoute(method, path /*, handler*/));
+  void add(String method, String path, Function handler) {
+    _routes.add(new BearRoute(method, path, handler));
   }
 
-  void route(BearContext charbonContext) {
+  void route(BearContext bearContext) {
     final List<BearRoute> filteredRoutes = _routes
         .where((BearRoute route) =>
-            route.method == charbonContext.request.method &&
-            route.matches(charbonContext))
+            route.method == bearContext.request.method &&
+            route.matches(bearContext))
         .toList();
 
-    final BearRoute topRoute =
-        prioritizeRouter(charbonContext, filteredRoutes);
+    final BearRoute topRoute = prioritizeRouter(bearContext, filteredRoutes);
 
     if (topRoute != null) {
-      topRoute.handle(charbonContext);
+      topRoute.handle(bearContext);
     } else {
-      charbonContext.response.statusCode = HttpStatus.internalServerError;
-      charbonContext.response.write("NEED TO IMPLEMENT ERROR HANDLER");
-      charbonContext.response.close();
+      bearContext.response.statusCode = HttpStatus.internalServerError;
+      bearContext.response.write("NEED TO IMPLEMENT ERROR HANDLER");
+      bearContext.response.close();
     }
   }
 
   BearRoute prioritizeRouter(
-      BearContext charbonContext, List<BearRoute> routes) {
+      BearContext bearContext, List<BearRoute> routes) {
     final Map<BearRoute, int> priorities = new HashMap<BearRoute, int>();
 
     for (BearRoute route in routes) {
       final List<String> pathNodes = route.path.split("/");
       final List<String> requestNodes =
-          charbonContext.request.uri.path.split("/");
+          bearContext.request.uri.path.split("/");
 
       for (int i = 0; i < pathNodes.length; i++) {
         final String pathNode = pathNodes[i];
