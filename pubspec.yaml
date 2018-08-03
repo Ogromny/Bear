@@ -1,1 +1,4 @@
 name: bear
+author: Ogromny
+dev_dependencies:
+  test: any
