@@ -19,6 +19,15 @@ void main() {
     bear.post("/test", (BearContext bearContext) {
       bearContext.send("cKuYCuj37o");
     });
+    bear.put("/test", (BearContext bearContext) {
+      bearContext.send("bQwCbBlZOu");
+    });
+    bear.patch("/test", (BearContext bearContext) {
+      bearContext.send("nK2MwMegkf");
+    });
+    bear.delete("/test", (BearContext bearContext) {
+      bearContext.send("ZkoqQikCHf");
+    });
     bear.listen(InternetAddress.loopbackIPv4, port, silent: true);
   });
 
@@ -36,6 +45,21 @@ void main() {
     test("POST", () async {
       http.Response post = await http.post("${url}/test");
       expect(post.body, equals("cKuYCuj37o"));
+    });
+
+    test("PUT", () async {
+      http.Response put = await http.put("${url}/test");
+      expect(put.body, equals("bQwCbBlZOu"));
+    });
+
+    test("PATCH", () async {
+      http.Response patch = await http.patch("${url}/test");
+      expect(patch.body, equals("nK2MwMegkf"));
+    });
+
+    test("DELETE", () async {
+      http.Response delete = await http.delete("${url}/test");
+      expect(delete.body, equals("ZkoqQikCHf"));
     });
   });
 }
