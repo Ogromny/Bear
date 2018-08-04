@@ -16,6 +16,18 @@ class Bear {
   void post(String path, Function handler) {
     _router.add("POST", path, handler);
   }
+  
+  void put(String path, Function handler) {
+    _router.add("PUT", path, handler);
+  }
+
+  void patch(String path, Function handler) {
+    _router.add("PATCH", path, handler);
+  }
+
+  void delete(String path, Function handler) {
+    _router.add("DELETE", path, handler);
+  }
 
   void listen(InternetAddress host, int port, {bool silent: false}) async {
     this._server = await HttpServer.bind(host, port);
