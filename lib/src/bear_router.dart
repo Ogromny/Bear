@@ -1,68 +1,64 @@
-import "dart:collection";
 import "dart:io" show HttpStatus;
 
 import "bear_context.dart";
 import "bear_route.dart";
 
 class BearRouter {
-  final List<BearRoute> _routes;
+  final List<BearRoute> routes = <BearRoute>[];
 
-  BearRouter() : _routes = new List<BearRoute>();
+  BearRouter();
 
-  void add(String method, String path, Function handler) {
-    _routes.add(new BearRoute(method, path, handler));
+  void add(String method, String path, BearHandler handler) {
+    // TODO: check if already exist
+
+    routes.add(BearRoute(method, path, handler));
   }
 
-  void route(BearContext bearContext) {
-    final List<BearRoute> filteredRoutes = _routes
-        .where((BearRoute route) =>
-            route.method == bearContext.request.method &&
-            route.matches(bearContext))
+  void route(BearContext context) {
+    final method = context.request.method;
+
+    final routes = this
+        .routes
+        .where((route) => route.method == method && route.matches(context))
         .toList();
 
-    final BearRoute topRoute = prioritizeRouter(bearContext, filteredRoutes);
-
-    if (topRoute != null) {
-      topRoute.handle(bearContext);
-    } else {
-      bearContext.response.statusCode = HttpStatus.internalServerError;
-      bearContext.response.write("NEED TO IMPLEMENT ERROR HANDLER");
-      bearContext.response.close();
+    if (routes.isEmpty) {
+      // TODO
+      context.response.statusCode = HttpStatus.internalServerError;
+      context.send("NEED TO IMPLEMENT ERROR HANDLER");
     }
-  }
 
-  BearRoute prioritizeRouter(
-      BearContext bearContext, List<BearRoute> routes) {
-    final Map<BearRoute, int> priorities = new HashMap<BearRoute, int>();
+    final priorities = Map<BearRoute, int>();
 
-    for (BearRoute route in routes) {
-      final List<String> pathNodes = route.path.split("/");
-      final List<String> requestNodes =
-          bearContext.request.uri.path.split("/");
+    for (var route in routes) {
+      priorities.putIfAbsent(route, () => 0);
 
-      for (int i = 0; i < pathNodes.length; i++) {
-        final String pathNode = pathNodes[i];
-        final String requestNode = requestNodes[i];
+      final path = route.path;
+      final rPath = context.request.uri.path;
 
-        priorities.putIfAbsent(route, () => 0);
+      final pathNodes = path.split("/").where((e) => e.isNotEmpty).toList();
+      final requestNodes = rPath.split("/").where((e) => e.isNotEmpty).toList();
 
-        if (pathNode == requestNode) {
-          priorities[route] += 2;
-        } else if (pathNode.startsWith(":")) {
-          priorities[route] += 1;
+      for (int i = 0, j = pathNodes.length; i < j; i++) {
+        final pathNode = pathNodes[i];
+        final requestNode = requestNodes[i];
+
+        priorities[route] += pathNode.startsWith(":") ? 2 : 1;
+      }
+
+      final sorted = priorities.values.toList();
+      sorted.sort((int a, int b) => b - a);
+
+      for (var route in priorities.keys) {
+        if (priorities[route] == sorted.first) {
+          return route.handle(context);
         }
       }
+
+      context.response
+        ..statusCode = HttpStatus.internalServerError
+        ..write("NEED TO IMPLEMENT ERROR HANDLER")
+        ..close();
     }
-
-    final List<int> values = priorities.values.toList();
-    values.sort((int a, int b) => b - a);
-
-    BearRoute topRoute;
-
-    for (BearRoute route in priorities.keys) {
-      if (priorities[route] == values.first) topRoute = route;
-    }
-
-    return topRoute;
   }
 }
