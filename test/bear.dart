@@ -11,32 +11,32 @@ void main() {
   final String url = "http://${InternetAddress.loopbackIPv4.address}:${port}";
   Bear bear;
 
-  setUp(() {
-    bear = new Bear();
-    bear.get("/test", (BearContext bearContext) {
-      bearContext.send("q7XCBj6d6u");
-    });
-    bear.post("/test", (BearContext bearContext) {
-      bearContext.send("cKuYCuj37o");
-    });
-    bear.put("/test", (BearContext bearContext) {
-      bearContext.send("bQwCbBlZOu");
-    });
-    bear.patch("/test", (BearContext bearContext) {
-      bearContext.send("nK2MwMegkf");
-    });
-    bear.delete("/test", (BearContext bearContext) {
-      bearContext.send("ZkoqQikCHf");
-    });
-    bear.listen(InternetAddress.loopbackIPv4, port, silent: true);
-  });
-
-  tearDown(() {
-    bear.close(force: true, silent: true);
-    bear = null;
-  });
-
   group("HTTP Methods", () {
+    setUp(() {
+      bear = new Bear();
+      bear.get("/test", (BearContext bearContext) {
+        bearContext.send("q7XCBj6d6u");
+      });
+      bear.post("/test", (BearContext bearContext) {
+        bearContext.send("cKuYCuj37o");
+      });
+      bear.put("/test", (BearContext bearContext) {
+        bearContext.send("bQwCbBlZOu");
+      });
+      bear.patch("/test", (BearContext bearContext) {
+        bearContext.send("nK2MwMegkf");
+      });
+      bear.delete("/test", (BearContext bearContext) {
+        bearContext.send("ZkoqQikCHf");
+      });
+      bear.listen(InternetAddress.loopbackIPv4, port, silent: true);
+    });
+
+    tearDown(() {
+      bear.close(force: true, silent: true);
+      bear = null;
+    });
+
     test("GET", () async {
       http.Response get = await http.get("${url}/test");
       expect(get.body, equals("q7XCBj6d6u"));
@@ -60,6 +60,18 @@ void main() {
     test("DELETE", () async {
       http.Response delete = await http.delete("${url}/test");
       expect(delete.body, equals("ZkoqQikCHf"));
+    });
+  });
+
+  group("Router", () {
+    test("Anti-duplication", () {
+      bear = new Bear();
+
+      bear.get("/test", null);
+      bear.get("/test", null);
+      bear.get("/test", null);
+
+      expect(bear.router.routes.length, equals(1));
     });
   });
 }

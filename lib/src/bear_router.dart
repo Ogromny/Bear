@@ -9,7 +9,9 @@ class BearRouter {
   BearRouter();
 
   void add(String method, String path, BearHandler handler) {
-    // TODO: check if already exist
+    for (var route in routes) {
+      if (route.path == path && route.method == method) return;
+    }
 
     routes.add(BearRoute(method, path, handler));
   }
