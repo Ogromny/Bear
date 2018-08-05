@@ -1,37 +1,30 @@
 import "bear_context.dart";
 
+typedef BearHandler = void Function(BearContext context);
+
 class BearRoute {
-  String get method => _method;
-  String _method;
+  String method;
+  String path;
+  final BearHandler handler;
 
-  String get path => _path;
-  String _path;
+  BearRoute(this.method, this.path, this.handler);
 
-  final Function _handler;
+  bool matches(BearContext context) {
+    final rPath = context.request.uri.path;
 
-  BearRoute(this._method, this._path, this._handler);
-
-  bool matches(BearContext bearContext) {
-    if (bearContext.request.method != _method) return false;
-
-    final List<String> pathNodes = _path.split("/");
-    final List<String> requestNodes = bearContext.request.uri.path.split("/");
+    final pathNodes = path.split("/").where((e) => e.isNotEmpty).toList();
+    final requestNodes = rPath.split("/").where((e) => e.isNotEmpty).toList();
 
     if (pathNodes.length != requestNodes.length) return false;
 
-    for (int i = 0; i < pathNodes.length; i++) {
-      final String pathNode = pathNodes[i];
-      final String requestNode = requestNodes[i];
-
-      if (!_match(pathNode, requestNode)) return false;
+    for (var i = 0, j = pathNodes.length; i < j; i++) {
+      if (!match(pathNodes[i], requestNodes[i])) return false;
     }
 
     return true;
   }
 
-  bool _match(String pathNode, String requestNode) => pathNode == requestNode;
+  bool match(String pathNode, String requestNode) => pathNode == requestNode;
 
-  void handle(BearContext bearContext) {
-    _handler(bearContext);
-  }
+  void handle(BearContext context) => handler(context);
 }
