@@ -10,7 +10,22 @@ class BearRouter {
 
   void add(String method, String path, BearHandler handler) {
     for (var route in routes) {
-      if (route.path == path && route.method == method) return;
+      var score = 0;
+
+      final routeNodes = route.path.split("/").where((e) => e.isNotEmpty).toList();
+      final pathNodes = path.split("/").where((e) => e.isNotEmpty).toList();
+
+      if (routeNodes.length != pathNodes.length) break;
+
+      for (var i = 0, j = pathNodes.length; i < j; i++) {
+        final routeNode = routeNodes[i];
+        final pathNode = pathNodes[i];
+
+        if (routeNode == pathNode ||
+            (routeNode.startsWith(":") && pathNode.startsWith(":"))) score += 1;
+      }
+
+      if (score == routeNodes.length && route.method == method) return;
     }
 
     routes.add(BearRoute(method, path, handler));
@@ -18,49 +33,24 @@ class BearRouter {
 
   void route(BearContext context) {
     final method = context.request.method;
+    final path = context.request.uri.path;
 
-    final routes = this
-        .routes
-        .where((route) => route.method == method && route.matches(context))
-        .toList();
+    if (path == "/robots.txt" || path == "/favicon.ico") return;
 
-    if (routes.isEmpty) {
-      // TODO
-      context.response.statusCode = HttpStatus.internalServerError;
+    final matches = routes
+        .where((route) => route.method == method && route.matches(context));
+
+    if (matches.isEmpty) {
+      context.statusCode = HttpStatus.internalServerError;
       context.send("NEED TO IMPLEMENT ERROR HANDLER");
+
+      return;
     }
 
-    final priorities = Map<BearRoute, int>();
+    final perfect =
+        matches.firstWhere((route) => route.path == path, orElse: () => null);
+    if (perfect != null) return perfect.handle(context);
 
-    for (var route in routes) {
-      priorities.putIfAbsent(route, () => 0);
-
-      final path = route.path;
-      final rPath = context.request.uri.path;
-
-      final pathNodes = path.split("/").where((e) => e.isNotEmpty).toList();
-      final requestNodes = rPath.split("/").where((e) => e.isNotEmpty).toList();
-
-      for (int i = 0, j = pathNodes.length; i < j; i++) {
-        final pathNode = pathNodes[i];
-        final requestNode = requestNodes[i];
-
-        priorities[route] += pathNode.startsWith(":") ? 2 : 1;
-      }
-
-      final sorted = priorities.values.toList();
-      sorted.sort((int a, int b) => b - a);
-
-      for (var route in priorities.keys) {
-        if (priorities[route] == sorted.first) {
-          return route.handle(context);
-        }
-      }
-
-      context.response
-        ..statusCode = HttpStatus.internalServerError
-        ..write("NEED TO IMPLEMENT ERROR HANDLER")
-        ..close();
-    }
+    matches.first.handle(context);
   }
 }
