@@ -7,27 +7,34 @@ import "package:test/test.dart";
 import "../lib/bear.dart";
 
 void main() {
-  const int port = 4040;
-  final String url = "http://${InternetAddress.loopbackIPv4.address}:${port}";
+  const port = 4040;
+  final url = "http://${InternetAddress.loopbackIPv4.address}:${port}";
   Bear bear;
 
   group("HTTP Methods", () {
     setUp(() {
       bear = new Bear();
-      bear.get("/test", (BearContext bearContext) {
-        bearContext.send("q7XCBj6d6u");
+      bear.get("/test", (BearContext context) {
+        context.send("q7XCBj6d6u");
       });
-      bear.post("/test", (BearContext bearContext) {
-        bearContext.send("cKuYCuj37o");
+      bear.post("/test", (BearContext context) {
+        context.send("cKuYCuj37o");
       });
-      bear.put("/test", (BearContext bearContext) {
-        bearContext.send("bQwCbBlZOu");
+      bear.put("/test", (BearContext context) {
+        context.send("bQwCbBlZOu");
       });
-      bear.patch("/test", (BearContext bearContext) {
-        bearContext.send("nK2MwMegkf");
+      bear.patch("/test", (BearContext context) {
+        context.send("nK2MwMegkf");
       });
-      bear.delete("/test", (BearContext bearContext) {
-        bearContext.send("ZkoqQikCHf");
+      bear.delete("/test", (BearContext context) {
+        context.send("ZkoqQikCHf");
+      });
+
+      bear.get("/:name", (BearContext context) {
+        context.send("Vadim");
+      });
+      bear.get("/:name/:age", (BearContext context) {
+        context.send("Vadim 20");
       });
       bear.listen(InternetAddress.loopbackIPv4, port, silent: true);
     });
@@ -38,28 +45,43 @@ void main() {
     });
 
     test("GET", () async {
-      http.Response get = await http.get("${url}/test");
+      final get = await http.get("${url}/test");
       expect(get.body, equals("q7XCBj6d6u"));
     });
 
     test("POST", () async {
-      http.Response post = await http.post("${url}/test");
+      final post = await http.post("${url}/test");
       expect(post.body, equals("cKuYCuj37o"));
     });
 
     test("PUT", () async {
-      http.Response put = await http.put("${url}/test");
+      final put = await http.put("${url}/test");
       expect(put.body, equals("bQwCbBlZOu"));
     });
 
     test("PATCH", () async {
-      http.Response patch = await http.patch("${url}/test");
+      final patch = await http.patch("${url}/test");
       expect(patch.body, equals("nK2MwMegkf"));
     });
 
     test("DELETE", () async {
-      http.Response delete = await http.delete("${url}/test");
+      final delete = await http.delete("${url}/test");
       expect(delete.body, equals("ZkoqQikCHf"));
+    });
+
+    test("GET Dynamic URL 1", () async {
+      final get = await http.get("${url}/Vadim");
+      expect(get.body, equals("Vadim"));
+    });
+
+    test("GET Dynamic URL 2", () async {
+      final get = await http.get("${url}/Vadim/20");
+      expect(get.body, equals("Vadim 20"));
+    });
+
+    test("GET Dynamic URL 3", () async {
+      final get = await http.get("${url}/Vadim//20");
+      expect(get.body, isNot(equals("Vadim 20")));
     });
   });
 
