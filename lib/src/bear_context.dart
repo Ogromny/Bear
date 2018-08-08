@@ -8,6 +8,9 @@ class BearContext {
   int get statusCode => response.statusCode;
   set statusCode(int code) => response.statusCode = code;
 
+  String get mimeType => response.headers.contentType.mimeType;
+  set mimeType(String type) => response.headers.set("Content-Type", type);
+
   BearContext(this.request)
       : response = request.response,
         params = Map.from(request.uri.queryParameters);
