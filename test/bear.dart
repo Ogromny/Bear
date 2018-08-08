@@ -31,10 +31,10 @@ void main() {
       });
 
       bear.get("/:name", (BearContext context) {
-        context.send("Vadim");
+        context.send(context.params["name"]);
       });
       bear.get("/:name/:age", (BearContext context) {
-        context.send("Vadim 20");
+        context.send("${context.params['name']} ${context.params['age']}");
       });
       bear.listen(InternetAddress.loopbackIPv4, port, silent: true);
     });
@@ -80,8 +80,8 @@ void main() {
     });
 
     test("GET Dynamic URL 3", () async {
-      final get = await http.get("${url}/Vadim//20");
-      expect(get.body, isNot(equals("Vadim 20")));
+      final get = await http.get("${url}////Vadim/////20//");
+      expect(get.body, equals("Vadim 20"));
     });
   });
 
