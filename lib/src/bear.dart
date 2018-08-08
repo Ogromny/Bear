@@ -40,7 +40,7 @@ class Bear {
   void listen(InternetAddress host, int port, {bool silent: false}) async {
     server = await HttpServer.bind(host, port);
 
-    if (!silent) print("🐻️ Listening on ${host.address}:${port}");
+    if (!silent) print("🐻️ Listening on http://${host.address}:${port}");
 
     await for (HttpRequest request in server) {
       final context = BearContext(request);
