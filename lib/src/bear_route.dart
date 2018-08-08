@@ -12,14 +12,11 @@ class BearRoute {
   bool matches(BearContext context) {
     final rPath = context.request.uri.path;
 
-    var pathNodesSplit = path.split("/");
-    var requestNodesSplit = rPath.split("/");
+    final pathNodes = path.split("/").where((e) => e.isNotEmpty).toList();
+    final requestNodes = rPath.split("/").where((e) => e.isNotEmpty).toList();
 
-    if (pathNodesSplit.length != requestNodesSplit.length) return false;
-
-    final pathNodes = pathNodesSplit.where((e) => e.isNotEmpty).toList();
-    final requestNodes = requestNodesSplit.where((e) => e.isNotEmpty).toList();
-
+    if (pathNodes.length != requestNodes.length) return false;
+    
     for (var i = 0, j = pathNodes.length; i < j; i++) {
       if (!match(pathNodes[i], requestNodes[i], context)) return false;
     }

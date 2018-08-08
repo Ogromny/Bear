@@ -12,7 +12,8 @@ class BearRouter {
     for (var route in routes) {
       var score = 0;
 
-      final routeNodes = route.path.split("/").where((e) => e.isNotEmpty).toList();
+      final routeNodes =
+          route.path.split("/").where((e) => e.isNotEmpty).toList();
       final pathNodes = path.split("/").where((e) => e.isNotEmpty).toList();
 
       if (routeNodes.length != pathNodes.length) break;
@@ -37,20 +38,19 @@ class BearRouter {
 
     if (path == "/robots.txt" || path == "/favicon.ico") return;
 
-    final matches = routes
-        .where((route) => route.method == method && route.matches(context));
+    final matches = routes.where((route) => route.method == method);
 
-    if (matches.isEmpty) {
-      context.statusCode = HttpStatus.internalServerError;
-      context.send("NEED TO IMPLEMENT ERROR HANDLER");
+    if (matches.isNotEmpty) {
+      final perfect =
+          matches.firstWhere((r) => r.path == path, orElse: () => null);
+      if (perfect != null) return perfect.handle(context);
 
-      return;
+      final match =
+          matches.firstWhere((r) => r.matches(context), orElse: () => null);
+      if (match != null) return match.handle(context);
     }
 
-    final perfect =
-        matches.firstWhere((route) => route.path == path, orElse: () => null);
-    if (perfect != null) return perfect.handle(context);
-
-    matches.first.handle(context);
+    context.statusCode = HttpStatus.internalServerError;
+    context.send("NEED TO IMPLEMENT ERROR HANDLER");
   }
 }
