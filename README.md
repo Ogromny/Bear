@@ -8,7 +8,7 @@ A simple web framework in Dart
 
 ## Roadmap
 #### 0.2
-- [ ] MimeTypes
+- [x] MimeTypes
 - [ ] Middlewares
 
 #### 0.1
