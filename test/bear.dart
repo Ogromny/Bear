@@ -36,6 +36,9 @@ void main() {
       bear.get("/:name/:age", (BearContext context) {
         context.send("${context.params['name']} ${context.params['age']}");
       });
+      bear.get("/:name/test/:age", (BearContext context) {
+        context.send("${context.params['age']} ${context.params['name']}");
+      });
       bear.listen(InternetAddress.loopbackIPv4, port, silent: true);
     });
 
@@ -82,6 +85,11 @@ void main() {
     test("GET Dynamic URL 3", () async {
       final get = await http.get("${url}////Vadim/////20//");
       expect(get.body, equals("Vadim 20"));
+    });
+
+    test("GET Dynamic URL 4", () async {
+      final get = await http.get("${url}///Vadim//test/////////20");
+      expect(get.body, equals("20 Vadim"));
     });
   });
 
