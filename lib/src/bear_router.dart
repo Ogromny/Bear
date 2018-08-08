@@ -8,6 +8,10 @@ class BearRouter {
 
   BearRouter();
 
+  /// Add a new [BearRoute] to [routes].
+  ///
+  /// It will check if there is already a similar [BearRoute] in the
+  /// [routes], if yes then it will end the function.
   void add(String method, String path, BearHandler handler) {
     for (var route in routes) {
       var score = 0;
@@ -32,6 +36,11 @@ class BearRouter {
     routes.add(BearRoute(method, path, handler));
   }
 
+  /// Call the correspond [BearRoute] of the [context]
+  ///
+  /// It will prioritize the no-variable [BearRoute] first.
+  /// If there is no no-variable [BearRoute] it will call the correspond
+  /// variable [BearRoute]. Otherwise it will return an 500 error.
   void route(BearContext context) {
     final method = context.request.method;
     final path = context.request.uri.path;

@@ -12,6 +12,7 @@ class BearContext {
       : response = request.response,
         params = Map.from(request.uri.queryParameters);
 
+  /// Write and immediately close the context.
   void send(String output) => response
     ..write(output)
     ..close();

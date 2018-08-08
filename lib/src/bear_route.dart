@@ -1,5 +1,6 @@
 import "bear_context.dart";
 
+/// Handler method of each [BearRoute]
 typedef BearHandler = void Function(BearContext context);
 
 class BearRoute {
@@ -9,6 +10,7 @@ class BearRoute {
 
   BearRoute(this.method, this.path, this.handler);
 
+  /// Test if this [BearRoute] correspond to the [context].
   bool matches(BearContext context) {
     final rPath = context.request.uri.path;
 
@@ -24,6 +26,8 @@ class BearRoute {
     return true;
   }
 
+  /// Test if a node of the this [BearRoute] correspond to a node of the
+  /// [context].
   bool match(String pathNode, String requestNode, BearContext context) {
     if (pathNode == requestNode) return true;
 
@@ -36,5 +40,6 @@ class BearRoute {
     return false;
   }
 
+  /// Call this [handler] with the [context].
   void handle(BearContext context) => handler(context);
 }
