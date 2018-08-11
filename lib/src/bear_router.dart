@@ -18,7 +18,7 @@ class BearRouter {
           route.path.split("/").where((e) => e.isNotEmpty).toList();
       final pathNodes = path.split("/").where((e) => e.isNotEmpty).toList();
 
-      if (routeNodes.length != pathNodes.length) break;
+      if (routeNodes.length != pathNodes.length) continue;
 
       for (var i = 0, j = pathNodes.length; i < j; i++) {
         final routeNode = routeNodes[i];
