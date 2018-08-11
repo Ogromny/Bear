@@ -6,7 +6,7 @@ import "bear_middlewares.dart";
 import "bear_route.dart";
 import "bear_router.dart";
 
-const version = "0.1.0";
+const version = "0.2.0";
 
 class Bear {
   HttpServer server;
