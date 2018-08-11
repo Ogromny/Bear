@@ -9,7 +9,7 @@ A simple web framework in Dart
 
 ## Roadmap
 #### 0.3
-- [x] Static files support
+- [ ] Static files support
 
 #### 0.2
 - [x] MimeTypes
