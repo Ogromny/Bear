@@ -9,6 +9,7 @@ A simple web framework in Dart
 
 ## Roadmap
 #### 0.3
+- [ ] Write examples
 - [ ] Static files support
 
 #### 0.2
