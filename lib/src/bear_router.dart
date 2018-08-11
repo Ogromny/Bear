@@ -6,8 +6,6 @@ import "bear_route.dart";
 class BearRouter {
   final routes = <BearRoute>[];
 
-  BearRouter();
-
   /// Add a new [BearRoute] to [routes].
   ///
   /// It will check if there is already a similar [BearRoute] in the
