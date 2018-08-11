@@ -4,7 +4,7 @@ import "bear_context.dart";
 import "bear_route.dart";
 
 class BearRouter {
-  final List<BearRoute> routes = <BearRoute>[];
+  final routes = <BearRoute>[];
 
   BearRouter();
 
