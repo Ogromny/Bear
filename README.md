@@ -7,9 +7,12 @@ A simple web framework in Dart
 
 
 ## Roadmap
+#### 0.3
+TODO
+
 #### 0.2
 - [x] MimeTypes
-- [ ] Middlewares
+- [x] Middlewares
 
 #### 0.1
 - [x] GET, POST, PATCH, PUT, DELETE
