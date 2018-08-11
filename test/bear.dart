@@ -1,10 +1,10 @@
-import "dart:async";
 import "dart:io" show InternetAddress;
 
 import "package:http/http.dart" as http;
 import "package:test/test.dart";
 
 import "../lib/bear.dart";
+import "bear_middleware_test.dart";
 
 void main() {
   const port = 4040;
@@ -13,7 +13,7 @@ void main() {
 
   group("HTTP Methods", () {
     setUp(() {
-      bear = new Bear();
+      bear = Bear();
       bear.get("/test", (BearContext context) {
         context.send("q7XCBj6d6u");
       });
@@ -95,13 +95,37 @@ void main() {
 
   group("Router", () {
     test("Anti-duplication", () {
-      bear = new Bear();
+      bear = Bear();
 
       bear.get("/test", null);
       bear.get("/test", null);
       bear.get("/test", null);
 
       expect(bear.router.routes.length, equals(1));
+    });
+  });
+
+  group("Middleware", () {
+    setUp(() {
+      bear = Bear();
+
+      bear.get("/", (BearContext context) {
+        context.send(context.params["2746079324"]);
+      });
+
+      bear.use(BearMiddlewareTest());
+
+      bear.listen(InternetAddress.loopbackIPv4, 4040, silent: true);
+    });
+
+    tearDown(() {
+      bear.close(silent: true);
+      bear = null;
+    });
+
+    test("Simple", () async {
+      final middleware = await http.get("${url}/");
+      expect(middleware.body, equals("1863644190"));
     });
   });
 }
