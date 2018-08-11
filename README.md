@@ -4,6 +4,7 @@ A simple web framework in Dart
 ## Features
 * GET, POST, PATCH, PUT, DELETE Http methods
 * Variable parameters 
+* Middlewares
 
 
 ## Roadmap
