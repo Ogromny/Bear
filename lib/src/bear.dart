@@ -33,6 +33,8 @@ class Bear {
   void delete(String path, BearHandler handler) =>
       router.add("DELETE", path, handler);
 
+  void static(String path, String directory) => router.static(path, directory);
+
   /// Start the Bear.
   ///
   /// Takes a [InternetAddress] generally [InternetAddress.loopbackIPv4] and
@@ -41,7 +43,7 @@ class Bear {
   void listen(InternetAddress host, int port, {bool silent: false}) async {
     server = await HttpServer.bind(host, port);
 
-    if (!silent) print("🐻️ Listening on http://${host.address}:${port}");
+    if (!silent) print("ʕ•ᴥ•ʔ Listening on http://${host.address}:${port}");
 
     await for (HttpRequest request in server) {
       final context = await middlewares.process(BearContext(request));
@@ -57,7 +59,7 @@ class Bear {
   void close({bool force: false, bool silent: false}) {
     server.close(force: force);
 
-    if (!silent) print("🐻️ Closed");
+    if (!silent) print("ʕ•ᴥ•ʔ️ Closed");
   }
 
   /// Add a middleware.

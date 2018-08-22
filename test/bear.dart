@@ -119,13 +119,33 @@ void main() {
     });
 
     tearDown(() {
-      bear.close(silent: true);
+      bear.close(force: true, silent: true);
       bear = null;
     });
 
     test("Simple", () async {
       final middleware = await http.get("${url}/");
       expect(middleware.body, equals("1863644190"));
+    });
+  });
+
+  group("Static", () {
+    setUp(() {
+      bear = Bear();
+
+      bear.static("/", "");
+
+      bear.listen(InternetAddress.loopbackIPv4, 4040, silent: true);
+    });
+
+    tearDown(() {
+      bear.close(force: true, silent: true);
+      bear = null;
+    });
+
+    test("Simple", () async {
+      final static = await http.get("${url}/test/static");
+      expect(static.body, equals("This is a test"));
     });
   });
 }

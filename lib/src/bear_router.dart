@@ -2,9 +2,11 @@ import "dart:io" show HttpStatus;
 
 import "bear_context.dart";
 import "bear_route.dart";
+import "bear_static.dart";
 
 class BearRouter {
   final routes = <BearRoute>[];
+  final statics = <BearStatic>[];
 
   /// Add a new [BearRoute] to [routes].
   ///
@@ -34,6 +36,11 @@ class BearRouter {
     routes.add(BearRoute(method, path, handler));
   }
 
+  void static(String path, String directory) {
+    // TODO: anti duplication
+    statics.add(BearStatic(path, directory));
+  }
+
   /// Call the correspond [BearRoute] of the [context]
   ///
   /// It will prioritize the no-variable [BearRoute] first.
@@ -44,6 +51,11 @@ class BearRouter {
     final path = context.request.uri.path;
 
     if (path == "/robots.txt" || path == "/favicon.ico") return;
+
+    final static = statics.firstWhere((static) => static.matches(context),
+        orElse: () => null);
+
+    if (static != null) return static.handle(context);
 
     final matches = routes.where((route) => route.method == method);
 

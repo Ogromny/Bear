@@ -8,9 +8,11 @@ A simple web framework in Dart
 
 
 ## Roadmap
+#### 0.4
+- [ ] Total rewrite
+
 #### 0.3
-- [ ] Write examples
-- [ ] Static files support
+- [x] Static files support
 
 #### 0.2
 - [x] MimeTypes

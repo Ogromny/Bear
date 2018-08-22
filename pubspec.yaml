@@ -3,3 +3,6 @@ author: Ogromny
 dev_dependencies:
   test: any
   http: any
+dependencies:
+  path: any
+  mime: any

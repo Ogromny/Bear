@@ -9,14 +9,15 @@ class BearContext {
   set statusCode(int code) => response.statusCode = code;
 
   String get mimeType => response.headers.contentType.mimeType;
-  set mimeType(String type) => response.headers.set("Content-Type", type);
+  set mimeType(String type) =>
+      response.headers.set(HttpHeaders.contentTypeHeader, type);
 
   BearContext(this.request)
       : response = request.response,
         params = Map.from(request.uri.queryParameters);
 
   /// Write and immediately close the context.
-  void send(String output) => response
+  void send(Object output) => response
     ..write(output)
     ..close();
 }
