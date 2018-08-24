@@ -1,67 +1,46 @@
 import "dart:io";
 
-import "bear_context.dart";
-import "bear_middleware.dart";
-import "bear_middlewares.dart";
-import "bear_route.dart";
-import "bear_router.dart";
-
-const version = "0.2.0";
+import "context/bear_context.dart";
+import "router/bear_router.dart";
 
 class Bear {
-  HttpServer server;
+  HttpServer _server;
   final router = BearRouter();
-  final middlewares = BearMiddlewares();
 
   /// Add a GET route.
-  void get(String path, BearHandler handler) =>
+  void get(String path, Function(BearContext) handler) =>
       router.add("GET", path, handler);
 
   /// Add a POST route.
-  void post(String path, BearHandler handler) =>
+  void post(String path, Function(BearContext) handler) =>
       router.add("POST", path, handler);
 
   /// Add a PUT route.
-  void put(String path, BearHandler handler) =>
+  void put(String path, Function(BearContext) handler) =>
       router.add("PUT", path, handler);
 
   /// Add a PATCH route.
-  void patch(String path, BearHandler handler) =>
+  void patch(String path, Function(BearContext) handler) =>
       router.add("PATCH", path, handler);
 
   /// Add a DELETE route.
-  void delete(String path, BearHandler handler) =>
+  void delete(String path, Function(BearContext) handler) =>
       router.add("DELETE", path, handler);
 
-  void static(String path, String directory) => router.static(path, directory);
+  void listen({String host = "127.0.0.1", int port = 4040, bool silent: false}) async {
+    _server = await HttpServer.bind(host, port);
 
-  /// Start the Bear.
-  ///
-  /// Takes a [InternetAddress] generally [InternetAddress.loopbackIPv4] and
-  /// a port. Takes optional parameters [silent], [silent] allow nothing to
-  /// appear.
-  void listen(InternetAddress host, int port, {bool silent: false}) async {
-    server = await HttpServer.bind(host, port);
+    if (!silent) print("ʕ•ᴥ•ʔ Listening on http://${host}:${port}/.");
 
-    if (!silent) print("ʕ•ᴥ•ʔ Listening on http://${host.address}:${port}");
-
-    await for (HttpRequest request in server) {
-      final context = await middlewares.process(BearContext(request));
-
-      router.route(context);
+    await for (var request in _server) {
+      //TODO: middleware
+      router.route(BearContext(request));
     }
   }
 
-  /// Close the Bear.
-  ///
-  /// Takes optional parameters [force] and [silent], [silent] allow nothing
-  /// to appear, [force] force the server to close.
-  void close({bool force: false, bool silent: false}) {
-    server.close(force: force);
+  void close({bool silent: false, bool force: false}) {
+    _server.close(force: force);
 
-    if (!silent) print("ʕ•ᴥ•ʔ️ Closed");
+    if (!silent) print("ʕ•ᴥ•ʔ Closed.");
   }
-
-  /// Add a middleware.
-  void use(BearMiddleware middleware) => middlewares.add(middleware);
 }
