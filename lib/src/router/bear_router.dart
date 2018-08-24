@@ -12,7 +12,7 @@ class BearRouter {
   /// It will check if there is already a similar [BearRoute] in the [routes],
   /// if the [method] and the [path] match a [BearRoute] in [routes], the new
   /// [BearRoute] will not be added.
-  void add(String method, String path, Function(BearContext) handler) {
+  void add(String method, String path, Object handler) {
     for (var route in routes) {
       var score = 0;
 

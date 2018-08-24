@@ -4,7 +4,7 @@ import "../utils/bear_utils.dart";
 class BearRoute {
   String method;
   String path;
-  Function(BearContext context) handler;
+  dynamic handler;
 
   BearRoute(this.method, this.path, this.handler);
 
@@ -35,6 +35,22 @@ class BearRoute {
     return true;
   }
 
-  /// Call this [handler] with the [c]
-  void handle(BearContext c) => handler(c);
+  /// Call the [handler]
+  ///
+  /// If [handler] is a [Function] who take a [BearContext], call it with [c]
+  /// Else if [handler] is a [Function], call it and if the return isn't null, write the return to the response
+  /// Otherwise write the [handler] to the response.
+  void handle(BearContext c) {
+    if (handler is Function(BearContext)) {
+      handler(c);
+    } else if (handler is Function) {
+      c.response
+        ..write(handler())
+        ..close();
+    } else {
+      c.response
+        ..write(handler)
+        ..close();
+    }
+  }
 }
