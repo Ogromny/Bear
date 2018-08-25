@@ -3,8 +3,8 @@ import "dart:io" show InternetAddress;
 import "package:http/http.dart" as http;
 import "package:test/test.dart";
 
+import "bear_middleware_test.dart";
 import "../lib/bear.dart";
-import "bear_middleware_test";
 
 void main() {
   const port = 4040;
@@ -133,31 +133,32 @@ void main() {
     });
   });
 
-//  group("Middleware", () {
-//    setUp(() {
-//      bear = Bear();
-//
-//      bear.get("/", (BearContext context) {
-//        context.response..write(context.params["2746079324"]);
-//        context.response.close();
-//      });
-//
-//      bear.use(BearMiddlewareTest());
-//
-//      bear.listen(silent: true);
-//    });
-//
-//    tearDown(() {
-//      bear.close(force: true, silent: true);
-//      bear = null;
-//    });
-//
-//    test("Simple", () async {
-//      final middleware = await http.get("${url}/");
-//      expect(middleware.body, equals("1863644190"));
-//    });
-//  });
-//
+  group("Middleware", () {
+    setUp(() {
+      bear = Bear();
+
+      bear.get("/", (BearContext c) {
+        c.response
+          ..write(c.params["2746079324"])
+          ..close();
+      });
+
+      bear.use(BearMiddlewareTest());
+
+      bear.listen(silent: true);
+    });
+
+    tearDown(() {
+      bear.close(force: true, silent: true);
+      bear = null;
+    });
+
+    test("Simple", () async {
+      final middleware = await http.get("${url}/");
+      expect(middleware.body, equals("1863644190"));
+    });
+  });
+
   group("Static", () {
     setUp(() {
       bear = Bear();
