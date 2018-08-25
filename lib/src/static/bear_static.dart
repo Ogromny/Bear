@@ -17,6 +17,7 @@ class BearStatic {
     }
   }
 
+  /// Check if [path] correspond to the [BearContext].
   bool matches(BearContext c) {
     final nodes = pathToNodes(path);
     final rodes = pathToNodes(c.request.uri.path);
@@ -30,6 +31,7 @@ class BearStatic {
     return true;
   }
 
+  /// Send the [file] to the [BearContext].
   void serveFile(File file, BearContext c) {
     final buffer = <int>[];
     buffer.length = file.lengthSync();
@@ -42,6 +44,7 @@ class BearStatic {
       ..close();
   }
 
+  /// List the content of the [directory].
   void serveDirectory(Directory directory, BearContext c) {
     final uri = c.request.uri;
     final buffer = StringBuffer();
@@ -103,6 +106,7 @@ class BearStatic {
       ..close();
   }
 
+  /// Determine which function need to be called.
   void handle(BearContext c) {
     final remotePath = c.request.uri.path;
     final path = remotePath.contains("..")

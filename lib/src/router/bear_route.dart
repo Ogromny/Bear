@@ -44,9 +44,9 @@ class BearRoute {
     if (handler is Function(BearContext)) {
       handler(c);
     } else if (handler is Function) {
-      c.response
-        ..write(handler())
-        ..close();
+      final Object ret = handler();
+      if (ret != null) c.response.write(ret);
+      c.response.close();
     } else {
       c.response
         ..write(handler)

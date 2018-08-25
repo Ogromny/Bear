@@ -1,11 +1,14 @@
 import "dart:io";
 
 import "context/bear_context.dart";
+import 'middleware/bear_middleware.dart';
+import 'middleware/bear_middlewares.dart';
 import "router/bear_router.dart";
 
 class Bear {
   HttpServer server;
   final router = BearRouter();
+  final middlewares = BearMiddlewares();
 
   /// Add a GET route.
   void get(String path, Object handler) => router.add("GET", path, handler);
@@ -26,6 +29,9 @@ class Bear {
   /// Add a static route.
   void static(String path, String directory) => router.static(path, directory);
 
+  /// Add a new [BearMiddleware].
+  void use(BearMiddleware middleware) => middlewares.add(middleware);
+
   /// Start the Bear.
   ///
   /// Takes optional parameters [host] [port] [silent]:
@@ -39,8 +45,7 @@ class Bear {
     if (!silent) print("ʕ•ᴥ•ʔ Listening on http://${host}:${port}/.");
 
     await for (var request in server) {
-      //TODO: middleware
-      router.route(BearContext(request));
+      router.route(await middlewares.process(BearContext(request)));
     }
   }
 
