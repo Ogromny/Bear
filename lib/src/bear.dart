@@ -8,24 +8,23 @@ class Bear {
   final router = BearRouter();
 
   /// Add a GET route.
-  void get(String path, Object handler) =>
-      router.add("GET", path, handler);
+  void get(String path, Object handler) => router.add("GET", path, handler);
 
   /// Add a POST route.
-  void post(String path, Object handler) =>
-      router.add("POST", path, handler);
+  void post(String path, Object handler) => router.add("POST", path, handler);
 
   /// Add a PUT route.
-  void put(String path, Object handler) =>
-      router.add("PUT", path, handler);
+  void put(String path, Object handler) => router.add("PUT", path, handler);
 
   /// Add a PATCH route.
-  void patch(String path, Object handler) =>
-      router.add("PATCH", path, handler);
+  void patch(String path, Object handler) => router.add("PATCH", path, handler);
 
   /// Add a DELETE route.
   void delete(String path, Object handler) =>
       router.add("DELETE", path, handler);
+
+  /// Add a static route.
+  void static(String path, String directory) => router.static(path, directory);
 
   /// Start the Bear.
   ///
@@ -33,7 +32,8 @@ class Bear {
   /// [host] the host to listen.
   /// [port] the port to listen.
   /// [silent] allow nothing to appear.
-  void listen({String host = "127.0.0.1", int port = 4040, bool silent: false}) async {
+  void listen(
+      {String host = "127.0.0.1", int port = 4040, bool silent: false}) async {
     server = await HttpServer.bind(host, port);
 
     if (!silent) print("ʕ•ᴥ•ʔ Listening on http://${host}:${port}/.");
@@ -50,7 +50,8 @@ class Bear {
   /// [silent] allow nothing to appear.
   /// [force] stop immediately the Bear.
   void close({bool silent: false, bool force: false}) {
-    server.close(force: force);
+    // When no connection have been the server is equals to null...
+    server?.close(force: force);
 
     if (!silent) print("ʕ•ᴥ•ʔ Closed.");
   }
