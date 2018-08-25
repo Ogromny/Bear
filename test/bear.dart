@@ -158,23 +158,29 @@ void main() {
 //    });
 //  });
 //
-//  group("Static", () {
-//    setUp(() {
-//      bear = Bear();
-//
-//      bear.static("/", "");
-//
-//      bear.listen(silent: true);
-//    });
-//
-//    tearDown(() {
-//      bear.close(force: true, silent: true);
-//      bear = null;
-//    });
-//
-//    test("Simple", () async {
-//      final static = await http.get("${url}/test/static");
-//      expect(static.body, equals("This is a test"));
-//    });
-//  });
+  group("Static", () {
+    setUp(() {
+      bear = Bear();
+
+      bear.static("/", "");
+      bear.static("/t/e/s/t", "");
+      bear.static("/t/e/s/t/", "");
+
+      bear.listen(silent: true);
+    });
+
+    tearDown(() {
+      bear.close(force: true, silent: true);
+      bear = null;
+    });
+
+    test("Simple", () async {
+      final static = await http.get("${url}/test/static");
+      expect(static.body, equals("This is a test"));
+    });
+
+    test("Anti duplication", () async {
+      expect(bear.router.statics.length, equals(2));
+    });
+  });
 }
