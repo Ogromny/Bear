@@ -1,5 +1,6 @@
 import "bear_route.dart";
 import "../context/bear_context.dart";
+import "../error/bear_error.dart";
 import "../utils/bear_utils.dart";
 import "../static/bear_static.dart";
 
@@ -89,10 +90,6 @@ class BearRouter {
       if (dynamic != null) return dynamic.handle(c);
     }
 
-    // TODO: implement error
-    c.response
-      ..statusCode = 500
-      ..write("ERROR/TODO")
-      ..close();
+    errorHandler(c);
   }
 }
