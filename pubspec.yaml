@@ -1,5 +1,5 @@
 name: bear
-author: Ogromny
+author: Ogromny <ogromnycoding@gmail.com>
 version: 0.4.1
 description: A simple web framework in Dart
 environment:
