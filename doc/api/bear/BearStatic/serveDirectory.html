@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="API docs for the serveDirectory method from the BearStatic class, for the Dart programming language.">
+  <title>serveDirectory method - BearStatic class - bear library - Dart API</title>
+  <!-- required because all the links are pseudo-absolute -->
+  <base href="../..">
+
+  <link href="https://fonts.googleapis.com/css?family=Source+Code+Pro:500,400i,400,300|Source+Sans+Pro:400,300,700" rel="stylesheet">
+  <link rel="stylesheet" href="static-assets/github.css">
+  <link rel="stylesheet" href="static-assets/styles.css">
+  <link rel="icon" href="static-assets/favicon.png">
+
+</head>
+
+<body>
+
+<div id="overlay-under-drawer"></div>
+
+<header id="title">
+  <button id="sidenav-left-toggle" type="button">&nbsp;</button>
+  <ol class="breadcrumbs gt-separated dark hidden-xs">
+    <li><a href="index.html">bear</a></li>
+    <li><a href="bear/bear-library.html">bear</a></li>
+    <li><a href="bear/BearStatic-class.html">BearStatic</a></li>
+    <li class="self-crumb">serveDirectory method</li>
+  </ol>
+  <div class="self-name">serveDirectory</div>
+  <form class="search navbar-right" role="search">
+    <input type="text" id="search-box" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+</header>
+
+<main>
+
+  <div class="col-xs-6 col-sm-3 col-md-2 sidebar sidebar-offcanvas-left">
+    <h5>BearStatic class</h5>
+    <ol>
+      <li class="section-title"><a href="bear/BearStatic-class.html#constructors">Constructors</a></li>
+      <li><a href="bear/BearStatic/BearStatic.html">BearStatic</a></li>
+    
+      <li class="section-title">
+        <a href="bear/BearStatic-class.html#instance-properties">Properties</a>
+      </li>
+      <li><a href="bear/BearStatic/directory.html">directory</a></li>
+      <li><a href="bear/BearStatic/path.html">path</a></li>
+      <li class="inherited"><a href="bear/BearStatic/hashCode.html">hashCode</a></li>
+      <li class="inherited"><a href="bear/BearStatic/runtimeType.html">runtimeType</a></li>
+    
+      <li class="section-title"><a href="bear/BearStatic-class.html#instance-methods">Methods</a></li>
+      <li><a href="bear/BearStatic/handle.html">handle</a></li>
+      <li><a href="bear/BearStatic/matches.html">matches</a></li>
+      <li><a href="bear/BearStatic/serveDirectory.html">serveDirectory</a></li>
+      <li><a href="bear/BearStatic/serveFile.html">serveFile</a></li>
+      <li class="inherited"><a href="bear/BearStatic/noSuchMethod.html">noSuchMethod</a></li>
+      <li class="inherited"><a href="bear/BearStatic/toString.html">toString</a></li>
+    
+      <li class="section-title inherited"><a href="bear/BearStatic-class.html#operators">Operators</a></li>
+      <li class="inherited"><a href="bear/BearStatic/operator_equals.html">operator ==</a></li>
+    
+    
+    
+    </ol>
+  </div><!--/.sidebar-offcanvas-->
+
+  <div class="col-xs-12 col-sm-9 col-md-8 main-content">
+    <h1>serveDirectory method</h1>
+
+    <section class="multi-line-signature">
+      <span class="returntype">void</span>
+      <span class="name ">serveDirectory</span>
+(<wbr><span class="parameter" id="serveDirectory-param-directory"><span class="type-annotation">Directory</span> <span class="parameter-name">directory</span>, </span> <span class="parameter" id="serveDirectory-param-c"><span class="type-annotation"><a href="bear/BearContext-class.html">BearContext</a></span> <span class="parameter-name">c</span></span>)
+    </section>
+    <section class="desc markdown">
+      <p>List the content of the <code>directory</code>.</p>
+    </section>
+    
+    <section class="summary source-code" id="source">
+      <h2><span>Implementation</span> </h2>
+      <pre class="language-dart"><code class="language-dart">void serveDirectory(Directory directory, BearContext c) {
+  final uri = c.request.uri;
+  final buffer = StringBuffer();
+
+  buffer
+    ..write(&quot;&lt;!DOCTYPE html&gt;&quot;)
+    ..write(&quot;&lt;html&gt;&quot;)
+    ..write(&quot;&lt;head&gt;&quot;)
+    ..write(&quot;&lt;title&gt;${uri}&lt;&#47;title&gt;&quot;)
+    ..write(&quot;&lt;&#47;head&gt;&quot;)
+    ..write(&quot;&lt;body&gt;&quot;)
+    ..write(&quot;&lt;h1&gt;Index of ${uri.path.replaceFirst(path, &quot;&quot;)}&lt;&#47;h1&gt;&quot;)
+    ..write(&quot;&lt;pre&gt;&quot;)
+    ..write(&quot;Name${&quot; &quot; * (50 - &quot;Name&quot;.length)}&quot;)
+    ..write(&quot;Last modified${&quot; &quot; * (30 - &quot;Last modified&quot;.length)}&quot;)
+    ..write(&quot;Size&quot;)
+    ..write(&quot;&lt;&#47;pre&gt;&quot;)
+    ..write(&#39;&lt;hr noshade align=&quot;left&quot; width=&quot;80%&quot;&gt;&#39;)
+    ..write(&quot;&lt;pre&gt;&quot;);
+
+  &#47;&#47; First line ( .. )
+  if (&quot;${path}&#47;&quot; != uri.path &amp;&amp; path != uri.path) {
+    final parent = directory.parent;
+    final parentPath = p.relative(parent.path, from: this.directory);
+    final parentModified = parent.statSync().modified.toString();
+    final parentSize = parent.statSync().size;
+
+    buffer
+      ..write(&quot;&lt;a href=&#39;${p.join(path, parentPath)}&#39;&gt;..&lt;&#47;a&gt;&quot;)
+      ..write(&quot;${&quot; &quot; * (50 - &quot;..&quot;.length)}&quot;)
+      ..write(&quot;${parentModified}${&quot; &quot; * (30 - parentModified.length)}&quot;)
+      ..write(&quot;${parentSize}&quot;)
+      ..write(&quot;&lt;br&gt;&quot;);
+  }
+
+  &#47;&#47; Struct of directory
+  for (var file in directory.listSync()) {
+    final name = p.basename(file.path);
+    final modified = file.statSync().modified.toString();
+    final size = file.statSync().size;
+
+    buffer
+      ..write(&quot;&lt;a href=&#39;${p.join(uri.path, name)}&#39;&gt;${name}&lt;&#47;a&gt;&quot;)
+      ..write(&quot;${&quot; &quot; * (50 - name.length)}&quot;)
+      ..write(&quot;${modified}${&quot; &quot; * (30 - modified.length)}&quot;)
+      ..write(&quot;${size}&quot;)
+      ..write(&quot;&lt;br&gt;&quot;);
+  }
+
+  buffer
+    ..write(&#39;&lt;hr noshade align=&quot;left&quot; width=&quot;80%&quot;&gt;&#39;)
+    ..write(&quot;&lt;&#47;pre&gt;&quot;)
+    ..write(&quot;&lt;&#47;body&gt;&quot;)
+    ..write(&quot;&lt;&#47;html&gt;&quot;);
+
+  c.response
+    ..headers.set(HttpHeaders.contentTypeHeader, ContentType.html.mimeType)
+    ..write(buffer.toString())
+    ..close();
+}</code></pre>
+    </section>
+
+  </div> <!-- /.main-content -->
+
+  <div class="col-xs-6 col-sm-6 col-md-2 sidebar sidebar-offcanvas-right">
+  </div><!--/.sidebar-offcanvas-->
+
+</main>
+
+<footer>
+  <span class="no-break">
+    bear 0.0.0-unknown
+  </span>
+
+</footer>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="static-assets/typeahead.bundle.min.js"></script>
+<script src="static-assets/highlight.pack.js"></script>
+<script src="static-assets/URI.js"></script>
+<script src="static-assets/script.js"></script>
+
+
+</body>
+
+</html>
