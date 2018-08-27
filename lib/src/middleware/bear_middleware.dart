@@ -6,15 +6,15 @@ import "../context/bear_context.dart";
 ///
 /// ```dart
 /// class BearMiddlewareTeapot implements BearMiddleware {
-//  @override
-//  Future<BearContext> process(BearContext c) {
-//    c.response
-//      ..statusCode = 418
-//      ..write("I'm a Teapot !");
-//
-//    return Future.value(c);
-//  }
-//}
+///  @override
+///  Future<BearContext> process(BearContext c) {
+///    c.response
+///      ..statusCode = 418
+///      ..write("I'm a Teapot !");
+///
+///    return Future.value(c);
+///  }
+///}
 /// ```
 abstract class BearMiddleware {
   /// The main function of each middleware.
