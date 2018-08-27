@@ -6,6 +6,13 @@ A simple web framework in Dart
 * Variable parameters 
 * Middlewares
 
+## Installation
+> add in your pubspec.yaml
+```yaml
+dependencies:
+  bear: any
+```
+
 ## Usage
 ```dart
 final bear = Bear();
