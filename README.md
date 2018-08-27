@@ -6,10 +6,12 @@ A simple web framework in Dart
 * Variable parameters 
 * Middlewares
 
+## Documentation
+https://ogromny.github.io/Bear/bear/bear-library.html
 
 ## Roadmap
 #### 0.4
-- [ ] Total rewrite
+- [x] Total rewrite
 
 #### 0.3
 - [x] Static files support
