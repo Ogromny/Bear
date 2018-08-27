@@ -2,8 +2,9 @@ name: bear
 author: Ogromny <ogromnycoding@gmail.com>
 version: 0.4.1
 description: A simple web framework in Dart
+homepage: https://github.com/Ogromny/Bear
 environment:
-  sdk: ">=2.0.0"
+  sdk: ">=2.0.0 <3.0.0"
 dev_dependencies:
   test: any
   http: any
