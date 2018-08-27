@@ -6,6 +6,20 @@ A simple web framework in Dart
 * Variable parameters 
 * Middlewares
 
+## Usage
+```dart
+final bear = Bear();
+
+bear.get("/", (BearContext c) {
+  c.response
+    ..write("Bear rocks!")
+    ..close();
+}
+...
+
+bear.listen();
+```
+
 ## Documentation
 https://ogromny.github.io/Bear/bear/bear-library.html
 
