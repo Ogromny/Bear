@@ -2,6 +2,9 @@ import "dart:io";
 
 import "../context/bear_context.dart";
 
+/// Temporally error handler.
+///
+/// TODO: Rewrite this.
 void errorHandler(BearContext c) {
   final buffer = StringBuffer();
 

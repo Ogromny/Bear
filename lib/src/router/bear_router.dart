@@ -4,10 +4,15 @@ import "../error/bear_error.dart";
 import "../utils/bear_utils.dart";
 import "../static/bear_static.dart";
 
+/// Dont need to be routed.
 const dont_route = ["/robots.txt", "/favicon.ico"];
 
+/// The "stocker" of route.
 class BearRouter {
+  /// The list of routes.
   final routes = <BearRoute>[];
+
+  /// The list of statics.
   final statics = <BearStatic>[];
 
   /// Add a new [BearRoute] to [routes]

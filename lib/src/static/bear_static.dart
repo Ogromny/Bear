@@ -7,10 +7,19 @@ import "../context/bear_context.dart";
 import "../error/bear_error.dart";
 import "../utils/bear_utils.dart";
 
+/// Object of each static.
 class BearStatic {
+  /// The uri to match, (example: /statics, /files, /uploads/images, ...).
   String path;
+
+  /// The directory to render, ( relative path, or absolute ) ( example: ../files )
   String directory;
 
+  /// Constructor.
+  ///
+  /// Take the [path] and the [directory].
+  ///
+  /// If the [directory] provided doesn't exist throw an error.
   BearStatic(this.path, String dir) : directory = p.normalize(p.absolute(dir)) {
     if (!Directory(directory).existsSync()) {
       throw "[BearStatic]: ${directory} directory doesn't exist.";

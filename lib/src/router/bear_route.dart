@@ -1,11 +1,18 @@
 import "../context/bear_context.dart";
 import "../utils/bear_utils.dart";
 
+/// Object of each route.
 class BearRoute {
+  /// ( GET, POST, PUT, PATCH, DELETE ).
   String method;
+  /// /, /index, /users/list, /users/:id/show, ...
   String path;
+  /// The handler to execute when route is matched.
+  ///
+  /// Can be anything, classically ( Function(BearContext) ).
   dynamic handler;
 
+  /// Constructor.
   BearRoute(this.method, this.path, this.handler);
 
   /// Test if this [BearRoute] fully match the [c]
